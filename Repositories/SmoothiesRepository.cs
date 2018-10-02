@@ -47,7 +47,7 @@ namespace burgershack.Repositories
       // MySQL will always lowercase column names, etc
       int id = _db.ExecuteScalar<int>(@"
         INSERT INTO smoothies (name, description, price)
-        VALUES (@Name, @Description, @Price)
+        VALUES (@Name, @Description, @Price);
         SELECT LAST_INSERT_ID();", smoothie
       );
       // execute = can write, query = can read
