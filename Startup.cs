@@ -23,11 +23,24 @@ namespace burgershack
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      // just like let bp = require(body-parser)
-      // app.use(bp.json())
-      // app.use(bp.urlencoded({extended: true}))
-      // app hasnt started yet - all about pulling 3rd party libraries and configuring them
-      // combined wth app.UseMvc() down below - sets up the project to work to a specific pattern; 
+      services.AddCors(options =>
+      {
+        options.AddPolicy("CorsDevPolicy", builder =>
+        {
+          // sets the cors policy to allow these below
+          builder
+          .AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowCredentials();
+        });
+      });
+      // hey add model-view-controller woo
+      services.AddMvc();
+
+
+      // just like let bp = require(body-parser), app.use(bp.json()), app.use(bp.urlencoded({extended: true})), app hasnt started yet 
+      // all about pulling 3rd party libraries and configuring them, combined wth app.UseMvc() down below - sets up the project to work to a specific pattern
       // dont name things wrong/put in wrong spot, it won't be registered 
       services.AddTransient<IDbConnection>(x => CreateDBContext());
 
@@ -50,13 +63,16 @@ namespace burgershack
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
+        app.UseCors("CorsDevPolicy");
       }
       else
       {
         app.UseHsts();
       }
+      app.UseDefaultFiles();
+      // means to say inside of the default route, wwwroot, is where your front end code will run woah
+      app.UseStaticFiles();
 
-      app.UseHttpsRedirection();
       app.UseMvc();
     }
   }
