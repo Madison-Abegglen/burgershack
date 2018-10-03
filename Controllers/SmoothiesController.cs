@@ -37,8 +37,5 @@ namespace burgershack.Controllers
       }
       throw new Exception("INVALID SMOOTHIE");
     }
-
-    [HttpPut]
-
   }
 }
